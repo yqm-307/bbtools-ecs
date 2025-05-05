@@ -5,28 +5,11 @@ namespace bbt::ecs
 
 
 Component::Component()
-    :m_is_active(true)
 {
-    OnCreate();
 }
-
 
 Component::~Component()
 {
-    OnDestory();
-}
-
-void Component::OnCreate()
-{
-}
-
-void Component::OnDestory()
-{
-}
-
-const char* Component::GetName()
-{
-    return Reflex_GetTypeName();
 }
 
 ComponentTemplateId Component::GetTemplateId()
@@ -42,50 +25,15 @@ ComponentId Component::GetId() const
 void Component::OnAddComponent(ecs::EntitySPtr parent)
 {
     m_parent_gameobject = parent;
-    Init();
+    OnEntity(parent);
 }
 
 void Component::OnDelComponent(ecs::EntitySPtr parent)
 {
     auto parent_sptr = m_parent_gameobject.lock();
+    OnUnEntity(parent_sptr);
     AssertWithInfo(parent_sptr == parent, "this a wrong! please check object life cycle!");
     m_parent_gameobject.reset(); // 释放parent所有权
-}
-
-void Component::OnEnable()
-{
-}
-
-void Component::OnDisable()
-{
-}
-
-void Component::Init()
-{
-}
-
-void Component::SetActive(bool is_active)
-{
-    if (m_is_active == is_active)
-        return;
-
-    if (is_active)
-        OnEnable();
-    else
-        OnDisable();
-
-    m_is_active = is_active;
-}
-
-bool Component::IsActive()
-{
-    return m_is_active;
-}
-
-void Component::Update()
-{
-    if (IsActive())
-        OnUpdate();
 }
 
 EntitySPtr Component::GetParentObject() const

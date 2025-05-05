@@ -15,35 +15,32 @@ class Component:
 public:
     explicit Component();
 
-    void                        SetActive(bool is_active);
-    bool                        IsActive();
-
     // interface
     //--------------------------------------------
     virtual                     ~Component() = 0;
-    virtual void                OnUpdate() = 0;
     virtual bbt::core::reflex::TypeId Reflex_GetTypeId() = 0;
     virtual const char*         Reflex_GetTypeName() = 0;
-    virtual void                OnAddComponent(ecs::EntitySPtr);
-    virtual void                OnDelComponent(ecs::EntitySPtr);
-    virtual void                OnEnable();
-    virtual void                OnDisable();
-    virtual void                Init();
+
+    /**
+     * @brief 当被添加到实体时调用
+     */
+    virtual void                OnEntity(ecs::EntitySPtr parent) {}
+
+    /**
+     * @brief 当被从实体中移除时调用
+     */
+    virtual void                OnUnEntity(ecs::EntitySPtr parent) {}
     //--------------------------------------------
 
-    const char*                 GetName();
     ComponentTemplateId         GetTemplateId();
     ComponentId                 GetId() const;
     EntitySPtr                  GetParentObject() const;
     SceneSPtr                   GetScene() const;
     ComponentMgrSPtr            GetComponentMgr() const;
-protected:
-    virtual void OnCreate();
-    virtual void OnDestory();
 private:
-    virtual void Update() final;
+    virtual void                OnAddComponent(ecs::EntitySPtr);
+    virtual void                OnDelComponent(ecs::EntitySPtr);
 private:
-    bool                    m_is_active;
     /**
      * 父对象的弱引用
      */

@@ -25,8 +25,6 @@ public:
     virtual ~PosComp() = default;
     BBT_REFLEX_DYN_TYPEINFO_METHOD(PosComp);
 
-    void OnUpdate() override {}
-
     int x{0};
     int y{0};
 };
@@ -39,8 +37,6 @@ public:
     virtual ~CommandComp() = default;
     BBT_REFLEX_DYN_TYPEINFO_METHOD(CommandComp);
 
-    void OnUpdate() override {}
-
     int cmd{0};
 };
 
@@ -51,8 +47,6 @@ public:
     VelocityComp() {};
     virtual ~VelocityComp() = default;
     BBT_REFLEX_DYN_TYPEINFO_METHOD(VelocityComp);
-
-    void OnUpdate() override {}
 
     int x{1};
     int y{1};
@@ -92,7 +86,6 @@ public: \
     name() {}; \
     virtual ~name() = default; \
     BBT_REFLEX_DYN_TYPEINFO_METHOD(name); \
-    void OnUpdate() override {} \
 };
 
 
