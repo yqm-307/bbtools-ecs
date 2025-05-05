@@ -7,16 +7,6 @@
 #include <bbt/ecs/component/Component.hpp>
 #include <bbt/ecs/filter/EntityFilter.hpp>
 
-class GameObject:
-    public bbt::ecs::Entity
-{
-public:
-    GameObject() : bbt::ecs::Entity(0) {};
-    virtual ~GameObject() = default;
-
-    void OnUpdate() {}
-};
-
 class PosComp:
     public bbt::ecs::Component
 {
@@ -57,6 +47,8 @@ class MoveSystem:
     public bbt::ecs::System
 {
 public:
+    MoveSystem() = default;
+    ~MoveSystem() = default;
 
     void OnInitFilter(std::shared_ptr<bbt::ecs::EntityFilter> filter) override
     {
@@ -101,6 +93,8 @@ class FilterTestSystem:
     public bbt::ecs::System
 {
 public:
+    FilterTestSystem() = default;
+    ~FilterTestSystem() = default;
 
     void OnInitFilter(std::shared_ptr<bbt::ecs::EntityFilter> filter) override
     {
@@ -140,9 +134,11 @@ BOOST_AUTO_TEST_CASE(t_scene_alone_update)
     scene->RegistSystem(move_system, bbt::ecs::EntityFilter());
     
 
-    auto go = scene->GetEntityMgr()->Create<GameObject>();
-    BOOST_ASSERT(go->AddComponent<PosComp>());
-    BOOST_ASSERT(go->AddComponent<VelocityComp>());
+    auto go = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<PosComp>(),
+            std::make_shared<VelocityComp>()});
+
+    BOOST_ASSERT(go != nullptr);
 
     scene->Update();
     
@@ -165,51 +161,58 @@ BOOST_AUTO_TEST_CASE(t_entity_filter_test)
     auto filter_system = std::make_shared<FilterTestSystem>();
     scene->RegistSystem(filter_system, bbt::ecs::EntityFilter());
     
-    auto go_1 = scene->GetEntityMgr()->Create<GameObject>();
+    auto go_1 = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<TestComp1>() });
+
     {
-        BOOST_ASSERT(go_1->AddComponent<TestComp1>());
+        BOOST_ASSERT(go_1 != nullptr);
         g_gameobject_count_map[go_1->GetId()] = go_1->GetComponentCount();
     }
 
-    auto go_12 = scene->GetEntityMgr()->Create<GameObject>();
+    auto go_12 = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<TestComp1>(),
+            std::make_shared<TestComp2>() });
     {
-        BOOST_ASSERT(go_12->AddComponent<TestComp1>());
-        BOOST_ASSERT(go_12->AddComponent<TestComp2>());
+        BOOST_ASSERT(go_12 != nullptr);
         g_gameobject_count_map[go_12->GetId()] = go_12->GetComponentCount();
     }
 
-    auto go_123 = scene->GetEntityMgr()->Create<GameObject>();
+    auto go_123 = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<TestComp1>(),
+            std::make_shared<TestComp2>(),
+            std::make_shared<TestComp3>() });
     {
-        BOOST_ASSERT(go_123->AddComponent<TestComp1>());
-        BOOST_ASSERT(go_123->AddComponent<TestComp2>());
-        BOOST_ASSERT(go_123->AddComponent<TestComp3>());
+        BOOST_ASSERT(go_123 != nullptr);
         g_gameobject_count_map[go_123->GetId()] = go_123->GetComponentCount();
     }
 
-    auto go_1234 = scene->GetEntityMgr()->Create<GameObject>();
+    auto go_1234 = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<TestComp1>(),
+            std::make_shared<TestComp2>(),
+            std::make_shared<TestComp3>(),
+            std::make_shared<TestComp4>() });
     {
-        BOOST_ASSERT(go_1234->AddComponent<TestComp1>());
-        BOOST_ASSERT(go_1234->AddComponent<TestComp2>());
-        BOOST_ASSERT(go_1234->AddComponent<TestComp3>());
-        BOOST_ASSERT(go_1234->AddComponent<TestComp4>());
+        BOOST_ASSERT(go_1234 != nullptr);
         g_gameobject_count_map[go_1234->GetId()] = go_1234->GetComponentCount();
     }
 
-    auto go_12345 = scene->GetEntityMgr()->Create<GameObject>();
+    auto go_12345 = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<TestComp1>(),
+            std::make_shared<TestComp2>(),
+            std::make_shared<TestComp3>(),
+            std::make_shared<TestComp4>(),
+            std::make_shared<TestComp5>() });
     {
-        BOOST_ASSERT(go_12345->AddComponent<TestComp1>());
-        BOOST_ASSERT(go_12345->AddComponent<TestComp2>());
-        BOOST_ASSERT(go_12345->AddComponent<TestComp3>());
-        BOOST_ASSERT(go_12345->AddComponent<TestComp4>());
-        BOOST_ASSERT(go_12345->AddComponent<TestComp5>());
+        BOOST_ASSERT(go_12345 != nullptr);
         g_gameobject_count_map[go_12345->GetId()] = go_12345->GetComponentCount();
     }
 
-    auto go_234 = scene->GetEntityMgr()->Create<GameObject>();
+    auto go_234 = scene->GetEntityMgr()->AddEntity(1,
+        {   std::make_shared<TestComp2>(),
+            std::make_shared<TestComp3>(),
+            std::make_shared<TestComp4>() });
     {
-        BOOST_ASSERT(go_234->AddComponent<TestComp2>());
-        BOOST_ASSERT(go_234->AddComponent<TestComp3>());
-        BOOST_ASSERT(go_234->AddComponent<TestComp4>());
+        BOOST_ASSERT(go_234 != nullptr);
         g_gameobject_count_map[go_234->GetId()] = go_234->GetComponentCount();
     }
 

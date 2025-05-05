@@ -21,6 +21,8 @@ public:
     SceneSPtr           GetScene() const;
     void                Update() {}
 
+    EntitySPtr          AddEntity(GameObjectTemplateId id, std::initializer_list<ComponentSPtr> components);
+
     bool InitTemplateInfo(std::initializer_list<GameObjectInfo> list);
 protected:
 
@@ -31,9 +33,9 @@ protected:
     virtual KeyType GenerateKey(MemberPtr member_base) override;
 
 private:
-    std::map<EntityId, EntityWKPtr>  m_gameobject_map;
+    std::map<EntityId, EntitySPtr>  m_gameobject_map;
     util::Hashmap<ComponentTemplateId, GameObjectInfo, 8> m_gameobject_info_map;
     SceneWKPtr m_scene;
 };
 
-}
+} // namespace bbt::ecs

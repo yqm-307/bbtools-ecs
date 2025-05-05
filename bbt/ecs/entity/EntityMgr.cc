@@ -31,12 +31,8 @@ EntityMgr::~EntityMgr()
      *          release node -->
      * clear
      */
-    while(!m_gameobject_map.empty())
-    {
-        auto&& wkptr = m_gameobject_map.begin()->second;
-        auto sptr = wkptr.lock();
-        sptr = nullptr;
-    }
+    m_gameobject_info_map.Clear();
+    m_gameobject_map.clear();
     Assert(m_gameobject_map.size() == 0);
 }
 
@@ -46,7 +42,7 @@ typename EntityMgr::Result EntityMgr::Search(KeyType key)
     if(it_obj == m_gameobject_map.end())
         return {nullptr, false};
 
-    return {(it_obj->second).lock(), true};
+    return {it_obj->second, true};
 }
 
 bool EntityMgr::IsExist(KeyType key)
@@ -98,6 +94,22 @@ EntityMgr::GenerateKey(MemberPtr member_base)
     return bbt::ecs::GenerateGameObjectID();
 }
 
+EntitySPtr EntityMgr::AddEntity(GameObjectTemplateId id, std::initializer_list<ComponentSPtr> components)
+{
+    if (id < 0)
+        return nullptr;
+
+    auto entity = Create<Entity>(id);
+    for (auto&& comp : components)
+    {
+        if (!entity->AddComponent(comp))
+            return nullptr;
+    }
+
+    return entity;
+}
+
+
 bool EntityMgr::InitTemplateInfo(std::initializer_list<GameObjectInfo> list)
 {
     static bool is_inited = false;
@@ -121,9 +133,8 @@ int EntityMgr::GetGameobjectByFilter(std::vector<EntityWKPtr>& gameobjects, std:
     if (filter == nullptr)
         return count;
 
-    for(auto&& [_, wkptr] : m_gameobject_map)
+    for(auto&& [_, sptr] : m_gameobject_map)
     {
-        auto sptr = wkptr.lock();
         if(sptr == nullptr)
             continue;
 

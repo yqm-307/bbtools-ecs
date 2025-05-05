@@ -6,14 +6,10 @@ namespace bbt::ecs
 
 
 
-Entity::Entity(int gobj_type)
+Entity::Entity(GameObjectTemplateId gobj_type)
     :m_gobj_type(gobj_type)
 {
     AssertWithInfo( gobj_type >= 0, "game object type error");
-}
-
-Entity::~Entity()
-{
 }
 
 ComponentSPtr Entity::GetComponent(ComponentTemplateId tid) const

@@ -7,15 +7,15 @@
 
 namespace bbt::ecs
 {
-class Entity:
+class Entity final:
     public std::enable_shared_from_this<Entity>,
     public bbt::core::util::MemberBase<EntityId, Entity>
 {
     friend class EntityMgr;
     friend class bbt::ecs::Scene;
 public:
-    explicit        Entity(int gobj_type);
-    virtual         ~Entity() = 0;
+    explicit        Entity(GameObjectTemplateId gobj_type);
+    virtual         ~Entity() = default;
 
 
     /**
